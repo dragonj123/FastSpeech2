@@ -1,7 +1,7 @@
 import re
 import argparse
 from string import punctuation
-
+import time
 import torch
 import yaml
 import numpy as np
@@ -98,6 +98,7 @@ def synthesize(model, step, configs, vocoder, batchs, control_values):
                 e_control=energy_control,
                 d_control=duration_control
             )
+            # print("===output-> ", output)
             synth_samples(
                 batch,
                 output,
@@ -210,5 +211,7 @@ if __name__ == "__main__":
         batchs = [(ids, raw_texts, speakers, texts, text_lens, max(text_lens))]
 
     control_values = args.pitch_control, args.energy_control, args.duration_control
-
+    time0 = time.time()
     synthesize(model, args.restore_step, configs, vocoder, batchs, control_values)
+    time1 = time.time()
+    print("Time-> ", round(time1-time0, 3))
